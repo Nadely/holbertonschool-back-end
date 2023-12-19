@@ -3,9 +3,9 @@
 returns information about his/her TODO list progress"""
 
 
+from sys import argv
 import csv
 import requests
-from sys import argv
 
 
 def get_employee_todo_progress():

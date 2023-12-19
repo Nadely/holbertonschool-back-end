@@ -3,8 +3,8 @@
 returns information about his/her TODO list progress"""
 
 
-import requests
 from sys import argv
+import requests
 
 
 def get_employee_todo_progress():
