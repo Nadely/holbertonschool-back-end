@@ -2,11 +2,9 @@
 """Write a Python script that, using this REST API, for a given employee ID,
 returns information about his/her TODO list progress"""
 
-
 from sys import argv
 import csv
 import requests
-
 
 def get_employee_todo_progress():
     user_id = argv[1]
@@ -15,11 +13,9 @@ def get_employee_todo_progress():
 
     if response.status_code == 200:
         user = response.json()
-
         username = user["username"]
 
     url_todos = f'https://jsonplaceholder.typicode.com/todos?userId={user_id}'
-
     response_todos = requests.get(url_todos)
     todos = response_todos.json()
 
@@ -27,14 +23,11 @@ def get_employee_todo_progress():
 
     input_variable = '{}.csv'.format(user_id)
     with open(input_variable, 'w', newline='') as csvfile:
-        file_writer = csv.writer(csvfile)
-        file_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS",
-                               "TASK_TITLE"])
+        file_writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
 
         for todo in todos:
-            file_writer.writerow([id_user, username, str(todo["completed"]),
-                                   todo["title"]])
-
+            file_writer.writerow([str(id_user), username, str(
+                todo["completed"]), todo["title"]])
 
 if __name__ == '__main__':
     get_employee_todo_progress()
