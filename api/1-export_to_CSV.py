@@ -29,7 +29,7 @@ def get_employee_todo_progress(user_id):
         data_user.append(newrow)
 
     file_name = '{}.csv'.format(user_id)
-    with open(file_name, 'w', newline='') as csvfile:
+    with open(file_name, 'w') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerows(data_user)
 
