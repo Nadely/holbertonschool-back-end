@@ -6,28 +6,34 @@ from sys import argv
 import csv
 import requests
 
-def get_employee_todo_progress():
-    user_id = argv[1]
-    url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
-    response = requests.get(url)
 
-    if response.status_code == 200:
-        user = response.json()
-        username = user["username"]
+def get_employee_todo_progress(user_id):
+    """get the response and format and write data to CSV"""
 
-    url_todos = f'https://jsonplaceholder.typicode.com/todos?userId={user_id}'
-    response_todos = requests.get(url_todos)
-    todos = response_todos.json()
+    todos_url = 'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id)
+    todos_response = requests.get(todos_url)
+    todos = todos_response.json()
 
-    id_user = user["id"]
+    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
+    user_response = requests.get(user_url)
+    user = user_response.json()
 
-    input_variable = '{}.csv'.format(user_id)
-    with open(input_variable, 'w', newline='') as csvfile:
-        file_writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)
+    username = user.get("username")
 
-        for todo in todos:
-            file_writer.writerow([str(id_user), username, str(
-                todo["completed"]), todo["title"]])
+    data_user = [
+        ["userId", "userName", "completed", "title"]
+    ]
+
+    for todo in todos:
+        newrow = [todo.get("userId"), username, todo.get("completed"), todo.get("title")]
+        data_user.append(newrow)
+
+    file_name = '{}.csv'.format(user_id)
+    with open(file_name, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerows(data_user)
+
 
 if __name__ == '__main__':
-    get_employee_todo_progress()
+    """main function"""
+    get_employee_todo_progress(argv[1])
