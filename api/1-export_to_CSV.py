@@ -7,17 +7,13 @@ import requests
 from sys import argv
 
 
-def get_employee_todo_progress(user_id):
+if __name__ == '__main__':
     """Get the response and format and write data to CSV"""
 
-    todos_url = (
-        'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id))
-    todos_response = requests.get(todos_url)
-    todos = todos_response.json()
-
-    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
-    user_response = requests.get(user_url)
-    user = user_response.json()
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos?userId={}'
+                         .format(argv[1])).json()
+    user = requests.get('https://jsonplaceholder.typicode.com/users/{}'
+                        .format(argv[1])).json()
 
     username = user.get("username")
     data_user = []
@@ -27,14 +23,9 @@ def get_employee_todo_progress(user_id):
                   todo.get("title")]
         data_user.append(newrow)
 
-    file_name = '{}.csv'.format(user_id)
+    file_name = '{}.csv'.format(argv[1])
     with open(file_name, mode='w') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerows(data_user)
 
         print(f"Data has been exported to {argv[1]}.csv")
-
-
-if __name__ == '__main__':
-    """main function"""
-    get_employee_todo_progress(argv[1])
