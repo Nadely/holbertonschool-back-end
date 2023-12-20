@@ -2,8 +2,8 @@
 """This script fetches and displays the TODO list progress for a
 given employee ID."""
 
-from sys import argv
 import requests
+from sys import argv
 
 
 def get_employee_todo_progress():
@@ -17,8 +17,8 @@ def get_employee_todo_progress():
         user = response.json()
         user_name = user["name"]
 
-        url_todos = (
-            f'https://jsonplaceholder.typicode.com/todos?userId={user_id}')
+    url_todos = (
+        f'https://jsonplaceholder.typicode.com/todos?userId={user_id}')
 
     response_todos = requests.get(url_todos)
     todos = response_todos.json()
@@ -26,11 +26,13 @@ def get_employee_todo_progress():
     total_tasks = len(todos)
     done_tasks = 0
     titles = []
+
     for todo in todos:
         if todo["completed"] is True:
             done_tasks += 1
-            titles.append(todo["title"])
-    space_sting = '\n\t '.join(titles)
+            titles.append(todo['title'])
+
+    space_sting = "\n\t ".join(titles)
 
     print("Employee {} is done with tasks ({}/{}):\n\t {}"
           .format(user_name, done_tasks, total_tasks, space_sting))
