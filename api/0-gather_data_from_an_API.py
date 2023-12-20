@@ -6,39 +6,35 @@ from sys import argv
 import requests
 
 
-def get_employee_todo_progress(user_id):
+def get_employee_todo_progress():
     """Fetch and print TODO list progress for a given user_id."""
 
-    # Fetch user details
-    user_url = f'https://jsonplaceholder.typicode.com/users/{user_id}'
-    user_response = requests.get(user_url)
+    user_id = argv[1]
+    url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
+    response = requests.get(url)
 
-    if user_response.status_code == 200:
-        user = user_response.json()
-        user_name = user.get("name", "")
+    if response.status_code == 200:
+        user = response.json()
+        user_name = user["name"]
 
-        # Fetch TODOs for the user
-        todos_url = (
+        url_todos = (
             f'https://jsonplaceholder.typicode.com/todos?userId={user_id}')
-        todos_response = requests.get(todos_url)
 
-        if todos_response.status_code == 200:
-            todos = todos_response.json()
+    response_todos = requests.get(url_todos)
+    todos = response_todos.json()
 
-            # Count completed tasks and gather their titles
-            done_tasks = [todo.get("title", "") for todo in todos if todo.get(
-                "completed", False)]
-            total_tasks = len(todos)
+    total_tasks = len(todos)
+    done_tasks = 0
+    titles = []
+    for todo in todos:
+        if todo["completed"] is True:
+            done_tasks += 1
+            titles.append(todo["title"])
+    space_sting = '\n\t '.join(titles)
 
-            print(f"Employee {user_name} is done with tasks
-                  ({len(done_tasks)}/{total_tasks}): \n\t{', '.join(
-                      done_tasks)}")
+    print("Employee {} is done with tasks ({}/{}):\n\t {}"
+          .format(user_name, done_tasks, total_tasks, space_sting))
 
 
 if __name__ == '__main__':
-    # Ensure user_id is provided as an argument
-    if len(argv) != 2:
-        print("Usage: {} <user_id>".format(argv[0]))
-        exit(1)
-
-    get_employee_todo_progress(argv[1])
+    get_employee_todo_progress()
