@@ -1,22 +1,21 @@
 #!/usr/bin/python3
-"""Write a Python script that, using this REST API, for a given employee ID,
-returns information about his/her TODO list progress"""
+"""This script fetches and displays the TODO list progress for a
+given employee ID."""
 
 from sys import argv
 import requests
 
 
 def get_employee_todo_progress(user_id):
-    """Fetch and print TODO list progress for a given user_id"""
+    """Fetch and print TODO list progress for a given user_id."""
 
     # Fetch user details
-    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
+    user_url = f'https://jsonplaceholder.typicode.com/users/{user_id}'
     user_response = requests.get(user_url)
 
     if user_response.status_code == 200:
         user = user_response.json()
-        user_name = user["name"]
-        # Updated to fetch the correct field from the response
+        user_name = user.get("name", "")
 
         # Fetch TODOs for the user
         todos_url = (
@@ -27,11 +26,12 @@ def get_employee_todo_progress(user_id):
             todos = todos_response.json()
 
             # Count completed tasks and gather their titles
-            done_tasks = [todo["title"] for todo in todos if todo["completed"]]
+            done_tasks = [todo.get("title", "") for todo in todos if todo.get(
+                "completed", False)]
             total_tasks = len(todos)
 
             print(f"Employee {user_name} is done with tasks
-                  ({len(done_tasks)}/{total_tasks}):\n\t {', '.join(
+                  ({len(done_tasks)}/{total_tasks}): \n\t{', '.join(
                       done_tasks)}")
 
 
