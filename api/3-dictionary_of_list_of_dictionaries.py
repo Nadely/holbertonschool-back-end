@@ -32,10 +32,9 @@ def get_employee_todo_progress():
                 # Store todos data for each user
                 todos_data[user_id] = [
                     {
-                        "userId": user_id,
-                        "userName": username,
-                        "completed": todo["completed"],
-                        "title": todo["title"]
+                        "username": username,
+                        "task": todo["title"],
+                        "completed": todo["completed"]
                     }
                     for todo in todos
                 ]
