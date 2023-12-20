@@ -8,7 +8,7 @@ from sys import argv
 
 
 def get_employee_todo_progress(user_id):
-    """get the response and format and write data to CSV"""
+    """Get the response and format and write data to CSV"""
 
     todos_url = (
         'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id))
