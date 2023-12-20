@@ -10,7 +10,8 @@ import requests
 def get_employee_todo_progress(user_id):
     """get the response and format and write data to CSV"""
 
-    todos_url = 'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id)
+    todos_url = (
+        'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id))
     todos_response = requests.get(todos_url)
     todos = todos_response.json()
 
@@ -20,12 +21,11 @@ def get_employee_todo_progress(user_id):
 
     username = user.get("username")
 
-    data_user = [
-        ["userId", "userName", "completed", "title"]
-    ]
+    data_user = [["userId", "userName", "completed", "title"]]
 
     for todo in todos:
-        newrow = [todo.get("userId"), username, todo.get("completed"), todo.get("title")]
+        newrow = [todo.get("userId"), username, todo.get("completed"),
+                  todo.get("title")]
         data_user.append(newrow)
 
     file_name = '{}.csv'.format(user_id)
