@@ -2,40 +2,43 @@
 """Write a Python script that, using this REST API, for a given employee ID,
 returns information about his/her TODO list progress"""
 
-
 import requests
 from sys import argv
 
 
-def get_employee_todo_progress():
-    user_id = argv[1]
-    url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
-    response = requests.get(url)
+def get_employee_todo_progress(user_id):
+    """Fetch and print TODO list progress for a given user_id"""
 
-    if response.status_code == 200:
-        user = response.json()
+    # Fetch user details
+    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(user_id)
+    user_response = requests.get(user_url)
 
+    if user_response.status_code == 200:
+        user = user_response.json()
         user_name = user["name"]
+        # Updated to fetch the correct field from the response
 
-    url_todos = f'https://jsonplaceholder.typicode.com/todos?userId={user_id}'
+        # Fetch TODOs for the user
+        todos_url = (
+            f'https://jsonplaceholder.typicode.com/todos?userId={user_id}')
+        todos_response = requests.get(todos_url)
 
-    response_todos = requests.get(url_todos)
-    todos = response_todos.json()
+        if todos_response.status_code == 200:
+            todos = todos_response.json()
 
-    total_tasks = len(todos)
-    done_tasks = 0
-    titles = []
+            # Count completed tasks and gather their titles
+            done_tasks = [todo["title"] for todo in todos if todo["completed"]]
+            total_tasks = len(todos)
 
-    for todo in todos:
-        if todo["completed"] == True:
-            done_tasks += 1
-            titles.append(todo["title"])
-
-    space_sting = '\n\t '.join(titles)
-
-    print("Employee {} is done with tasks ({}/{}):\n\t {}"
-          .format(user_name, done_tasks, total_tasks, space_sting))
+            print(f"Employee {user_name} is done with tasks
+                  ({len(done_tasks)}/{total_tasks}):\n\t {', '.join(
+                      done_tasks)}")
 
 
 if __name__ == '__main__':
-    get_employee_todo_progress()
+    # Ensure user_id is provided as an argument
+    if len(argv) != 2:
+        print("Usage: {} <user_id>".format(argv[0]))
+        exit(1)
+
+    get_employee_todo_progress(argv[1])
