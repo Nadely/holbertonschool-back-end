@@ -20,7 +20,6 @@ def get_employee_todo_progress(user_id):
     user = user_response.json()
 
     username = user.get("username")
-
     data_user = []
 
     for todo in todos:
@@ -29,9 +28,11 @@ def get_employee_todo_progress(user_id):
         data_user.append(newrow)
 
     file_name = '{}.csv'.format(user_id)
-    with open(file_name, 'w') as csvfile:
+    with open(file_name, mode='w') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerows(data_user)
+
+        print(f"Data has been exported to {argv[1]}.csv")
 
 
 if __name__ == '__main__':
