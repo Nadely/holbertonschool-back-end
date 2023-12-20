@@ -21,7 +21,7 @@ def get_employee_todo_progress(user_id):
 
     username = user.get("username")
 
-    data_user = [[]]
+    data_user = []
 
     for todo in todos:
         newrow = [todo.get("userId"), username, todo.get("completed"),
