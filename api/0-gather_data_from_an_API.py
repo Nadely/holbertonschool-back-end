@@ -26,9 +26,7 @@ def get_employee_todo_progress():
     response_todos = requests.get(url_todos)
     todos = response_todos.json()
 
-
     task_completed = [task for task in todos if task['completed']]
-
 
     user_name = user["name"]
     len_completed_tasks = len(task_completed)
